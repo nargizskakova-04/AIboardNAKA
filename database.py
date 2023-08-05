@@ -12,7 +12,7 @@ from sqlalchemy import (
     func
 )
 
-DATABASE_URL = "postgresql://codegirl:password@localhost:5432/database1"
+DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/postgres"
 
 database = Database(DATABASE_URL)
 metadata = MetaData()

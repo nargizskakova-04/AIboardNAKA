@@ -13,5 +13,8 @@ class EditPostRequest(BaseModel):
     text: Optional[str] = None
     author: Optional[str] = None
 
+class EditPostTextRequest(BaseModel):
+    text: Optional[str] = None
+
 class HaikuRequest(BaseModel):
     keywords: str

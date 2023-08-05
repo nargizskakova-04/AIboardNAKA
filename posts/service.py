@@ -1,4 +1,4 @@
-from posts.schemas import CreatePostRequest, EditPostRequest
+from posts.schemas import CreatePostRequest, EditPostRequest, EditPostTextRequest
 from database import database
 from sqlalchemy import insert, select, update, delete
 from database import posts
@@ -40,6 +40,17 @@ async def edit_post(post_id: int, post: EditPostRequest):
         .returning(posts)
     )
     return await database.fetch_one(update_query)
+
+
+async def edit_post_text(post_id: int, post: EditPostTextRequest):
+    post_db = await get_post_by_id(post_id)
+    if not post_db:
+        raise HTTPException(status_code=404, detail="post not found")
+    
+    if post.text is not None:
+        post_db = await edit_post_text(post_id, post.text)
+    
+    return post_db
 
 
 async def delete_post(post_id: int):

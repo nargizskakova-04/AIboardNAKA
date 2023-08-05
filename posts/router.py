@@ -1,9 +1,14 @@
-from posts.schemas import CreatePostRequest, EditPostRequest, HaikuRequest
-from fastapi import APIRouter
+from posts.schemas import CreatePostRequest, EditPostRequest, HaikuRequest, EditPostTextRequest
+from fastapi import APIRouter, Depends, HTTPException
 from posts import service
 import os
 import requests
 from dotenv import load_dotenv
+
+from sqlalchemy.orm import Session
+
+
+from database import engine, database
 
 
 load_dotenv()
@@ -50,3 +55,25 @@ async def generate_haiku(req: HaikuRequest):
 }
     r = requests.post(url=MODEL_URL, json=prompt_data, headers=HEADERS).json()
     return r["output"]
+
+async def get_post_text(id: int):
+    select_query = f"SELECT text FROM posts WHERE id = {id}"
+    post = await database.fetch_one(select_query)
+    if not post:
+        raise HTTPException(status_code=404, detail="post not found")
+
+    return post
+
+
+
+#тут короч он тип текст вохвращает вродь как
+def get_db():
+    db = get_posts
+    try:
+        yield db 
+    finally:
+        db.close()
+
+@router.put('/text/{id}')
+async def edit_post_text(id: int, post_data: EditPostTextRequest, db: Session = Depends(get_db)):
+    return await service.edit_post_text(db, id, post_data)
