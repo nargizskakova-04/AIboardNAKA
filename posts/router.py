@@ -11,6 +11,7 @@ token = os.environ.get("token")
 
 MODEL_URL = "https://7583-185-48-148-173.ngrok-free.app/custom-prompt"
 
+HEADERS = {"Authorization": f"Bearer {token}"}
 
 from posts import service
 
@@ -54,5 +55,5 @@ async def generate_haiku(req: HaikuRequest):
   "repeat_last_n": 64,
   "n_predict": 128
 }
-    r = requests.post(url=MODEL_URL, json=prompt_data, headers={"Authorization": f"Bearer {token}"}).json()
+    r = requests.post(url=MODEL_URL, json=prompt_data, headers=HEADERS).json()
     return r["output"]
