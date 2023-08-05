@@ -1,19 +1,16 @@
 from posts.schemas import CreatePostRequest, EditPostRequest, HaikuRequest
-from fastapi import HTTPException, APIRouter
-import requests
-
-from dotenv import load_dotenv
-load_dotenv()
-
+from fastapi import APIRouter
+from posts import service
 import os
+import requests
+from dotenv import load_dotenv
 
+
+load_dotenv()
 token = os.environ.get("token")
-
 MODEL_URL = "https://7583-185-48-148-173.ngrok-free.app/custom-prompt"
-
 HEADERS = {"Authorization": f"Bearer {token}"}
 
-from posts import service
 
 router = APIRouter()
 
@@ -22,21 +19,17 @@ router = APIRouter()
 async def get_posts():
     return await service.get_posts()
 
-
 @router.post('')
 async def create_post(post: CreatePostRequest):
     return await service.create_post(post)
-
 
 @router.get('/{id}')
 async def get_post(id: int):
     return await service.get_post_by_id(id)
 
-
 @router.put('/{id}')
 async def edit_post(id: int, post_data: EditPostRequest):
     return await service.edit_post(id, post_data)
-
 
 @router.delete('/{id}')
 async def delete_post(id: int):

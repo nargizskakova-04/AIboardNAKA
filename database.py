@@ -1,4 +1,3 @@
-# pip install databases sqlalchemy asyncpg psycopg2-binary
 from databases import Database
 from sqlalchemy import (
     MetaData,
@@ -10,11 +9,8 @@ from sqlalchemy import (
     String,
     Text,
     DateTime,
-    ARRAY,
     func
 )
-
-#  insert
 
 DATABASE_URL = "postgresql://codegirl:password@localhost:5432/database1"
 
@@ -32,5 +28,4 @@ posts = Table(
 )
 
 engine = create_engine(DATABASE_URL)
-
 metadata.create_all(engine)

@@ -1,9 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from posts.router import router
 from database import database
-# from typing import List
-
 
 app = FastAPI()
 
@@ -14,7 +12,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
 
 
 @app.on_event("startup")
