@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 from posts.router import router
 from database import database
@@ -6,6 +6,7 @@ from database import database
 
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,6 +15,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["ngrok-skip-browser-warning"] = '*'
+    return response
 
 
 
@@ -25,4 +31,4 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
-app.include_router(router, prefix="/posts")
+app.include_router(router, prefix="/posts", tags = ["Posts"])
