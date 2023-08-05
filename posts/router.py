@@ -1,8 +1,13 @@
-from posts.schemas import CreatePostRequest, EditPostRequest
+from posts.schemas import CreatePostRequest, EditPostRequest, HaikuRequest
 from fastapi import HTTPException, APIRouter
 import requests
 
+from dotenv import load_dotenv
+load_dotenv()
 
+import os
+
+token = os.environ.get("token")
 
 MODEL_URL = "https://7583-185-48-148-173.ngrok-free.app/custom-prompt"
 
@@ -38,10 +43,10 @@ async def delete_post(id: int):
 
     return {"message": "ok, deleted"}
 
-@router.post('/generate-haiku/{keywords}')
-async def generate_haiku(keywords: str):
+@router.post('/generate-haiku')
+async def generate_haiku(req: HaikuRequest):
     prompt_data = {
-  "input_text": f"generate a traditional haiku with words {keywords}",
+  "input_text": f"generate a traditional haiku with words {req.keywords}",
   "top_k": 40,
   "top_p": 0.95,
   "temp": 0.1,
@@ -49,5 +54,5 @@ async def generate_haiku(keywords: str):
   "repeat_last_n": 64,
   "n_predict": 128
 }
-    r = requests.post(url=MODEL_URL, data=prompt_data).json()
-    return r
+    r = requests.post(url=MODEL_URL, json=prompt_data, headers={"Authorization": f"Bearer {token}"}).json()
+    return r["output"]
