@@ -15,12 +15,6 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["ngrok-skip-browser-warning"] = '*'
-    return response
-
 
 
 @app.on_event("startup")
