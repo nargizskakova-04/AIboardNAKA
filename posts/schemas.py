@@ -3,16 +3,12 @@ from pydantic import BaseModel
 
 
 class CreatePostRequest(BaseModel):
-    title: str
-    content: str
+    text: str
     author: str
-    location: str
-    image_urls: List[str]
+    keywords: str
 
 
 class EditPostRequest(BaseModel):
-    title: Optional[str] = None
-    content: Optional[str] = None
+    keywords: Optional[str] = None
+    text: Optional[str] = None
     author: Optional[str] = None
-    location: Optional[str] = None
-    image_urls: List[str] = None
